@@ -59,6 +59,7 @@
                 android:layout_margin="10dp">
 
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Name" />
@@ -72,7 +73,6 @@
                 android:background="@color/purple_500"
                 android:text="START"
                 android:textSize="30sp"/>
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
