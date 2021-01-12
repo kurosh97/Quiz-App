@@ -1,6 +1,7 @@
 package com.quizapp
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -15,13 +16,15 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mCurrentPosition: Int = 1 // Default and the first question position
     private var mQuestionsList: ArrayList<Question>? = null
-
+    private var mCorrectAnswers: Int = 0
     private var mSelectedOptionPosition: Int = 0
+    private var mUserName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
-
+        //filling it with data
+        mUserName = intent.getStringExtra(Constants.USER_NAME)
         mQuestionsList = Constants.getQuestions()
 
         setQuestion()
@@ -68,14 +71,18 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                     mCurrentPosition++
 
                     when {
-
                         mCurrentPosition <= mQuestionsList!!.size -> {
-
                             setQuestion()
                         }
                         else -> {
-
-                            Toast.makeText(this@QuizQuestionsActivity, "You have successfully completed the quiz.", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(
+                                this,
+                                ResultActivity::class.java
+                            )//sending data to Result screen
+                            intent.putExtra(Constants.USER_NAME, mUserName)
+                            intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
+                            intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionsList!!.size)
+                            startActivity(intent)
                         }
                     }
                 } else {
@@ -84,8 +91,9 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                     // This is to check if the answer is wrong
                     if (question!!.correctAnswer != mSelectedOptionPosition) {
                         answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
+                    } else {
+                        mCorrectAnswers++
                     }
-
                     // This is for correct answer
                     answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
 
@@ -104,18 +112,18 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     @SuppressLint("SetTextI18n")
     private fun setQuestion() {
 
-        val question = mQuestionsList!!.get(mCurrentPosition - 1) // Getting the question from the list with the help of current position.
+        val question =
+            mQuestionsList!!.get(mCurrentPosition - 1) // Getting the question from the list with the help of current position.
 
         defaultOptionsView()
 
-        // TODO (STEP 6: Check here if the position of question is last then change the text of the button.)
-        // START
+
         if (mCurrentPosition == mQuestionsList!!.size) {
             btn_submit.text = "FINISH"
         } else {
             btn_submit.text = "SUBMIT"
         }
-        // END
+
 
         progressBar.progress = mCurrentPosition
         tv_progress.text = "$mCurrentPosition" + "/" + progressBar.max
@@ -135,12 +143,12 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         mSelectedOptionPosition = selectedOptionNum
 
         tv.setTextColor(
-                Color.parseColor("#363A43")
+            Color.parseColor("#363A43")
         )
         tv.setTypeface(tv.typeface, Typeface.BOLD)
         tv.background = ContextCompat.getDrawable(
-                this@QuizQuestionsActivity,
-                R.drawable.selected_option_border_bg
+            this@QuizQuestionsActivity,
+            R.drawable.selected_option_border_bg
         )
     }
 
@@ -157,8 +165,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
             option.setTextColor(Color.parseColor("#7A8089"))
             option.typeface = Typeface.DEFAULT
             option.background = ContextCompat.getDrawable(
-                    this@QuizQuestionsActivity,
-                    R.drawable.default_option_border_bg
+                this@QuizQuestionsActivity,
+                R.drawable.default_option_border_bg
             )
         }
     }
@@ -169,26 +177,26 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
             1 -> {
                 tv_option_one.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
             2 -> {
                 tv_option_two.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
             3 -> {
                 tv_option_three.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
             4 -> {
                 tv_option_four.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
         }
